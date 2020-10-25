@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InstagramAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201012151456_InitDb")]
+    [Migration("20201022205544_InitDb")]
     partial class InitDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,18 +21,18 @@ namespace InstagramAPI.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("InstagramAPI.Models.Comments", b =>
+            modelBuilder.Entity("InstagramAPI.Models.Comment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("CommentAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Likes")
                         .HasColumnType("int");
@@ -47,6 +47,21 @@ namespace InstagramAPI.Migrations
                     b.ToTable("Comments");
                 });
 
+            modelBuilder.Entity("InstagramAPI.Models.Gender", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Genders");
+                });
+
             modelBuilder.Entity("InstagramAPI.Models.Media", b =>
                 {
                     b.Property<int>("Id")
@@ -58,14 +73,14 @@ namespace InstagramAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("MediaUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("PublishedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("nbLike")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -87,6 +102,21 @@ namespace InstagramAPI.Migrations
                     b.HasIndex("AppUserFollowId");
 
                     b.ToTable("UserFollows");
+                });
+
+            modelBuilder.Entity("InstagramAPI.Models.UserLikeMedia", b =>
+                {
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("MediaId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AppUserId", "MediaId");
+
+                    b.HasIndex("MediaId");
+
+                    b.ToTable("UserLikeMedias");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -295,10 +325,30 @@ namespace InstagramAPI.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
+                    b.Property<string>("Biography")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("GenderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RegisteredAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("WebSite")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasIndex("GenderId");
+
                     b.HasDiscriminator().HasValue("AppUser");
                 });
 
-            modelBuilder.Entity("InstagramAPI.Models.Comments", b =>
+            modelBuilder.Entity("InstagramAPI.Models.Comment", b =>
                 {
                     b.HasOne("InstagramAPI.Models.Media", "Media")
                         .WithMany()
@@ -327,6 +377,21 @@ namespace InstagramAPI.Migrations
                     b.HasOne("InstagramAPI.Models.AppUser", "AppUserFollowed")
                         .WithMany()
                         .HasForeignKey("AppUserFollowedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("InstagramAPI.Models.UserLikeMedia", b =>
+                {
+                    b.HasOne("InstagramAPI.Models.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("InstagramAPI.Models.Media", "Media")
+                        .WithMany()
+                        .HasForeignKey("MediaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -378,6 +443,15 @@ namespace InstagramAPI.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("InstagramAPI.Models.AppUser", b =>
+                {
+                    b.HasOne("InstagramAPI.Models.Gender", "Gender")
+                        .WithMany()
+                        .HasForeignKey("GenderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -25,8 +25,4 @@ export class AuthService {
     return this.http.get(`${this.url}/user`);
   }
 
-  medias() {
-    return this.http.get<any[]>('https://localhost:44398/api/medias');
-  }
-
 }

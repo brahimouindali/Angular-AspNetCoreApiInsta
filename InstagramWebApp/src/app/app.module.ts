@@ -15,6 +15,7 @@ import { MediaComponent } from './components/media/media.component';
 import { AuthInterceptor } from './services/auth.interceptor';
 import { MediaService } from './services/media.service';
 import { AuthService } from './services/auth.service';
+import { CommentformComponent } from './components/commentform/commentform.component';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { AuthService } from './services/auth.service';
     SignupComponent,
     NavComponent,
     ProfileComponent,
-    MediaComponent
+    MediaComponent,
+    CommentformComponent
   ],
   imports: [
     BrowserModule,

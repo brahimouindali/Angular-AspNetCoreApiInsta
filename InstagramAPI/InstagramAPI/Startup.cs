@@ -31,6 +31,10 @@ namespace InstagramAPI
         {
             services.Configure<ApplicationSettings>(Configuration.GetSection("ApplicationSettings"));
 
+            var emailConfig = Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
+            services.AddSingleton(emailConfig);
+            services.AddScoped<IEmailSender, EmailSender>();
+
             services.AddControllers();
 
             services.AddMailKit(config => config.UseMailKit(Configuration.GetSection("Email").Get<MailKitOptions>()));
@@ -73,6 +77,11 @@ namespace InstagramAPI
                     options.AllowAnyMethod();
                 });
             });
+
+            services.AddControllersWithViews()
+                    .AddNewtonsoftJson(options =>
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                );
 
         }
 

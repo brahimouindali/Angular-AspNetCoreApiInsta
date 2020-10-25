@@ -9,7 +9,6 @@ using InstagramAPI.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -36,16 +35,36 @@ namespace InstagramAPI.Controllers
 
         //get all medias
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Media>>> GetMedias()
+        public async Task<ActionResult<IEnumerable<MediaManage>>> GetMedias()
         {
             var user = await UserLoggedInAsync();
             var userFollowsId = _context.UserFollows
                                         .Where(uf => uf.AppUserFollowId == user.Id).Select(uf => uf.AppUserFollowedId);
 
-            var result = _context.Medias.Where(m => userFollowsId.Contains(m.AppUserId))
+            var medias = _context.Medias.Where(m => userFollowsId.Contains(m.AppUserId))
+                .Include(m => m.AppUser)
                                     .OrderByDescending(m => m.PublishedAt);
 
-            return Ok(result);
+            var mediaManages = new List<MediaManage>();
+            foreach (var media in medias)
+            {
+                var mediaIsLiked = _context.UserLikeMedias.Any(um => um.AppUserId == user.Id && um.MediaId == media.Id);
+                var comments = new List<Comment>();
+                var com = _context.Comments.Where(c => c.MediaId == media.Id).FirstOrDefault();
+                var countLikeMedia = _context.UserLikeMedias.Where(cm => cm.MediaId == media.Id).Count();
+                comments.Add(com);
+                var mediaManage = new MediaManage
+                {
+                    Media = media,
+                    IsLiked = mediaIsLiked,
+                    Comments = comments,
+                    CountComments = comments.Count,
+                    CountLikes = countLikeMedia
+                };
+                mediaManages.Add(mediaManage);
+            }
+
+            return Ok(mediaManages);
         }
 
         //get user logged in
@@ -95,7 +114,7 @@ namespace InstagramAPI.Controllers
                     Description = media.Description
                 };
 
-                await _context.Medias.AddAsync(newMedia);
+                _context.Medias.Add(newMedia);
                 await _context.SaveChangesAsync();
                 return Ok(newMedia);
             }
@@ -141,26 +160,31 @@ namespace InstagramAPI.Controllers
 
         [HttpPost]
         [Route("likemedia")]
-        public async Task<IActionResult> LikeMedia(int mediaId)
+        public async Task<IActionResult> LikeMedia(MediaLogic media)
         {
             var user = await UserLoggedInAsync();
             var userLikeMedia = new UserLikeMedia
             {
                 AppUserId = user.Id,
-                MediaId = mediaId
+                MediaId = media.Id
             };
-
-            _context.UserLikeMedias.Add(userLikeMedia);
-            await _context.SaveChangesAsync();
-            return Ok();
+            var isAlreadyLiked = _context.UserLikeMedias.Any(um => um.AppUserId == user.Id && um.MediaId == media.Id);
+            if (!isAlreadyLiked)
+            {
+                _context.UserLikeMedias.Add(userLikeMedia);
+                await _context.SaveChangesAsync();
+                return Ok(userLikeMedia);
+            }
+            return BadRequest("media already liked");
         }
 
         [HttpDelete]
-        [Route("deslikemedia")]
-        public async Task<IActionResult> DesLikeMedia(int mediaId)
+        [Route("deslikemedia/{id}")]
+        public async Task<IActionResult> DesLikeMedia(int id)
         {
             var user = await UserLoggedInAsync();
-            var userLikeMediaToDelete = _context.UserLikeMedias.Where(um => um.AppUserId == user.Id && um.MediaId == mediaId).FirstOrDefault();
+            var userLikeMediaToDelete = _context.UserLikeMedias
+                    .Where(um => um.AppUserId == user.Id && um.MediaId == id).FirstOrDefault();
 
             if (userLikeMediaToDelete != null)
             {
@@ -170,5 +194,6 @@ namespace InstagramAPI.Controllers
             }
             return NotFound();
         }
+
     }
 }

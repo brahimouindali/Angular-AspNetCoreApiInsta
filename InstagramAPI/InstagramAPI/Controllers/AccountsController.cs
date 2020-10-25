@@ -28,24 +28,29 @@ namespace InstagramAPI.Controllers
         private readonly SignInManager<AppUser> _signInManager;
         private readonly UserManager<AppUser> _userManager;
         private readonly IEmailService _emailService;
+        private readonly IEmailSender _emailSender;
         private readonly ApplicationSettings _options;
 
         public AccountsController(ApplicationDbContext context,
             SignInManager<AppUser> signInManager,
             UserManager<AppUser> userManager,
             IOptions<ApplicationSettings> options,
-            IEmailService emailService)
+            IEmailService emailService,
+            IEmailSender emailSender
+            )
         {
             _context = context;
             _signInManager = signInManager;
             _userManager = userManager;
             _emailService = emailService;
+            _emailSender = emailSender;
             _options = options.Value;
         }
 
         [HttpGet]
+        [Route("users")]
         public async Task<IEnumerable<AppUser>> GetUsers() =>
-            await _context.AppUsers.Include(u => u.Gender).OrderByDescending(u => u.RegisteredAt).ToListAsync();
+            await _context.AppUsers.OrderByDescending(u => u.RegisteredAt).ToListAsync();
 
         [HttpPost]
         [Route("register")]
@@ -85,10 +90,14 @@ namespace InstagramAPI.Controllers
             var mailTo = user.Email;
             string subject = "Verify email adress";
 
-            await _emailService.SendAsync(mailTo, subject, $"by clicking the <a href={link}>link</a> you verify your email adress", true);
+            var message = new Message(new string[] { mailTo }, subject, link);
+            _emailSender.SendEmail(message);
+
+            //  await _emailService.SendAsync(mailTo, subject, $"by clicking the <a href={link}>link</a> you verify your email adress", true);
         }
 
-        public async Task<IActionResult> VerifyEmail(string userId, string code)
+        [HttpGet]
+        public async Task<IActionResult> VerifyEmail([FromQuery] string userId, string code)
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null) return BadRequest();

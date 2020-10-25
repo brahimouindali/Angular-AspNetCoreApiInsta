@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InstagramAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201017214000_addRegisteredAtToAppUserTable")]
-    partial class addRegisteredAtToAppUserTable
+    [Migration("20201024174934_addAppUserIdToComment")]
+    partial class addAppUserIdToComment
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,18 +21,21 @@ namespace InstagramAPI.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("InstagramAPI.Models.Comments", b =>
+            modelBuilder.Entity("InstagramAPI.Models.Comment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CommentAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Likes")
                         .HasColumnType("int");
@@ -41,6 +44,8 @@ namespace InstagramAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
 
                     b.HasIndex("MediaId");
 
@@ -82,9 +87,6 @@ namespace InstagramAPI.Migrations
                     b.Property<DateTime>("PublishedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("nbLike")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
@@ -105,6 +107,21 @@ namespace InstagramAPI.Migrations
                     b.HasIndex("AppUserFollowId");
 
                     b.ToTable("UserFollows");
+                });
+
+            modelBuilder.Entity("InstagramAPI.Models.UserLikeMedia", b =>
+                {
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("MediaId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AppUserId", "MediaId");
+
+                    b.HasIndex("MediaId");
+
+                    b.ToTable("UserLikeMedias");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -336,8 +353,12 @@ namespace InstagramAPI.Migrations
                     b.HasDiscriminator().HasValue("AppUser");
                 });
 
-            modelBuilder.Entity("InstagramAPI.Models.Comments", b =>
+            modelBuilder.Entity("InstagramAPI.Models.Comment", b =>
                 {
+                    b.HasOne("InstagramAPI.Models.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId");
+
                     b.HasOne("InstagramAPI.Models.Media", "Media")
                         .WithMany()
                         .HasForeignKey("MediaId")
@@ -365,6 +386,21 @@ namespace InstagramAPI.Migrations
                     b.HasOne("InstagramAPI.Models.AppUser", "AppUserFollowed")
                         .WithMany()
                         .HasForeignKey("AppUserFollowedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("InstagramAPI.Models.UserLikeMedia", b =>
+                {
+                    b.HasOne("InstagramAPI.Models.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("InstagramAPI.Models.Media", "Media")
+                        .WithMany()
+                        .HasForeignKey("MediaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

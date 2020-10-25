@@ -31,8 +31,6 @@ export class MediaComponent implements OnInit {
   }
 
   onSubmit(data) {
-    console.log('data ' + data);
-
     var formMedia = new FormData();
     formMedia.append('File', this.file);
     formMedia.append('Description', data.Description);

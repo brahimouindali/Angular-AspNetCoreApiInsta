@@ -10,7 +10,11 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class SigninComponent implements OnInit {
 
-  constructor(private authService: AuthService, private fb: FormBuilder, private router: Router) { }
+  constructor(
+    private authService: AuthService, 
+    private fb: FormBuilder, 
+    private router: Router
+    ) { }
 
   ngOnInit(): void {
     if(localStorage.getItem('token') != null)

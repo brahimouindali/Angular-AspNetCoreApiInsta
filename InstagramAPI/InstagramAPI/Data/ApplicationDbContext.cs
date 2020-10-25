@@ -24,7 +24,7 @@ namespace InstagramAPI.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<UserFollow>().HasKey(uf => new { uf.AppUserFollowedId, uf.AppUserFollowId });
-            builder.Entity<UserLikeMedia>().HasNoKey();
+            builder.Entity<UserLikeMedia>().HasKey(um => new { um.AppUserId, um.MediaId });
             base.OnModelCreating(builder);
         }
     }

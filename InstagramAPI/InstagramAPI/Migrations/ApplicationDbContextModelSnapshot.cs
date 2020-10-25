@@ -26,6 +26,9 @@ namespace InstagramAPI.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("CommentAt")
                         .HasColumnType("datetime2");
 
@@ -39,6 +42,8 @@ namespace InstagramAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
 
                     b.HasIndex("MediaId");
 
@@ -110,7 +115,7 @@ namespace InstagramAPI.Migrations
                     b.Property<int>("MediaId")
                         .HasColumnType("int");
 
-                    b.HasIndex("AppUserId");
+                    b.HasKey("AppUserId", "MediaId");
 
                     b.HasIndex("MediaId");
 
@@ -348,6 +353,10 @@ namespace InstagramAPI.Migrations
 
             modelBuilder.Entity("InstagramAPI.Models.Comment", b =>
                 {
+                    b.HasOne("InstagramAPI.Models.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId");
+
                     b.HasOne("InstagramAPI.Models.Media", "Media")
                         .WithMany()
                         .HasForeignKey("MediaId")
@@ -383,7 +392,9 @@ namespace InstagramAPI.Migrations
                 {
                     b.HasOne("InstagramAPI.Models.AppUser", "AppUser")
                         .WithMany()
-                        .HasForeignKey("AppUserId");
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("InstagramAPI.Models.Media", "Media")
                         .WithMany()
