@@ -1,0 +1,15 @@
+<form [formGroup]="newMediaForm" (ngSubmit)="onSubmit(newMediaForm.value)">
+  <div class="row" style="margin-top: 100px;">
+    <div class="col">
+      <input  type="file" formControlName="File"
+       style="display: none;"
+       #fileInput
+       (change)="onFileUpload()">
+      <button type="button"
+      class="btn btn-sm btn-primary" 
+      (click)="fileInput.click()">Upload file</button>
+      <textarea class="mt-3" formControlName="Description" style="resize: none; width: 100%;"></textarea>
+      <button type="submit" class="btn btn-warning" [disabled]="!newMediaForm.valid">Post media</button>
+    </div>
+  </div>
+</form>

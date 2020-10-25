@@ -1,0 +1,27 @@
+.card {
+  margin-top: 2em;
+}
+
+.card img.card-img-top {
+  height: 500px;
+  background-position: cover;
+  background-repeat: no-repeat;
+}
+
+#location {
+  position: absolute;
+  top: 51px;
+  left: 76px;
+}
+
+.card a {
+  color: rgba(38, 38, 38, 1);
+  font-weight: 600;
+}
+
+textarea {
+  resize: none;
+  outline: none;
+  width: 100%;
+  border: none;
+}

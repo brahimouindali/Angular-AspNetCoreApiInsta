@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Sansita+Swashed:wght@300&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+nav {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 44px;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, .125);
+  padding-bottom: 4px;
+  z-index: 100;
+  position: fixed;
+  right: 0;
+  left: 0;
+  top: 0;
+}
+
+nav a.nav-brand {
+  font-family: 'Sansita Swashed', cursive;
+  font-size: 22px;
+  color: rgba(000, 000, 000, .8);
+}
+
+nav a.nav-brand:hover {
+  text-decoration: none;
+}
+
+input[type='text'] {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  height: 24px;
+  background-color: rgba(219, 219, 219, .4);
+  ;
+  border: solid 1px #dbdbdb;
+  border-radius: 3px;
+  outline: none;
+  text-align: center;
+}
+
+ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+ul li {
+  margin-left: 20px;
+}
+
+ul li:first-child {
+  margin-left: 0;
+}
+
+li {
+  list-style: none;
+}
