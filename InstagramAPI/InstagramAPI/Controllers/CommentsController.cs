@@ -44,7 +44,7 @@ namespace InstagramAPI.Controllers
         {
             var comments = await _context.Comments.Where(c => c.MediaId == id)
                 .OrderByDescending(c => c.CommentAt).ToListAsync();
-            return comments;
+            return Ok(comments);
         }
 
         [HttpPost]
@@ -65,5 +65,30 @@ namespace InstagramAPI.Controllers
             return Ok(comment);
         }
 
+        [HttpPatch]
+        public async Task<IActionResult> UpdateComment(CommentModel model)
+        {
+            var commentToUpdate = _context.Comments.Where(c => c.Id == model.Id).FirstOrDefault();
+            if (commentToUpdate == null) return NotFound();
+            _context.Entry(commentToUpdate).State = EntityState.Modified;
+            commentToUpdate.Content = model.Content;
+
+            _context.Comments.Update(commentToUpdate);
+            await _context.SaveChangesAsync();
+
+            return Ok(commentToUpdate);
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> DeleteComment(int id)
+        {
+            var commentToDelete = _context.Comments.Where(c => c.Id == id).FirstOrDefault();
+            if (commentToDelete == null) return NotFound();
+
+            _context.Comments.Remove(commentToDelete);
+            await _context.SaveChangesAsync();
+            return Ok(commentToDelete);
+        }
     }
 }

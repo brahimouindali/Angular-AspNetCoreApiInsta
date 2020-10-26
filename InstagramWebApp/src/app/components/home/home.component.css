@@ -1,4 +1,4 @@
-.card {
+/*.card {
   margin-top: 2em;
 }
 
@@ -20,10 +20,9 @@
 }
 
 .bg-red {
-  /* stroke: red; */
   fill: rgb(237, 73, 86);
 }
 
-.author__description {
+ .author__description {
   margin-top: .6rem;
-}
+} */

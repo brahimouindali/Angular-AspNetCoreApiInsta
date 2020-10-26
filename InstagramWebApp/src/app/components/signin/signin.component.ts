@@ -10,15 +10,17 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class SigninComponent implements OnInit {
 
+  error: string = '';
+
   constructor(
-    private authService: AuthService, 
-    private fb: FormBuilder, 
+    private authService: AuthService,
+    private fb: FormBuilder,
     private router: Router
-    ) { }
+  ) { }
 
   ngOnInit(): void {
-    if(localStorage.getItem('token') != null)
-    this.router.navigate(['/home'])
+    if (localStorage.getItem('token') != null)
+      this.router.navigate(['/home'])
   }
 
   myForm: FormGroup = this.fb.group({
@@ -26,12 +28,15 @@ export class SigninComponent implements OnInit {
     'password': ['', Validators.compose([Validators.minLength(5), Validators.required, Validators.pattern("[a-zA-Z]+")])]
   });
 
-  login(user) { 
+  login(user) {
     this.authService.login(user).subscribe((data: any) => {
       localStorage.setItem('token', data.token)
-          this.router.navigateByUrl('/home')
+      this.router.navigateByUrl('/home')
     },
-      err => console.log(err)
+      err => {
+        this.error = err.error.message;
+        // console.log(err.error.message);
+      }
     );
   }
 

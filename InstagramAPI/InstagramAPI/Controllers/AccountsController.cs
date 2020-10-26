@@ -62,10 +62,6 @@ namespace InstagramAPI.Controllers
             {
                 Email = user.Email,
                 UserName = user.UserName,
-                PhoneNumber = user.PhoneNumber,
-                WebSite = user.Website,
-                Biography = user.Biography,
-                GenderId = user.GenderId,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 RegisteredAt = DateTime.Now
@@ -131,7 +127,7 @@ namespace InstagramAPI.Controllers
                 var token = tokenHandler.WriteToken(securityToken);
                 return Ok(new { token });
             }
-            return BadRequest(new { message = "username or password is incorrect." });
+            return BadRequest(new { message = "email or password is incorrect." });
         }
 
 

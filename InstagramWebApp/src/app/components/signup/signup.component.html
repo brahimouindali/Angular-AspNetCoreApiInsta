@@ -1,39 +1,37 @@
-<div class="page-wrapper bg-gra-01 font-poppins">
-  <div class="wrapper wrapper--w780">
-    <div class="card card-3">
-      <div class="card-heading"></div>
-      <div class="card-body">
-        <h2 class="title">Registration Info</h2>
-        <form method="POST">
-          <div class="input-group">
-            <input class="input--style-3" type="text" placeholder="Name" name="name">
-          </div>
-          <div class="input-group">
-            <input class="input--style-3 js-datepicker" type="text" placeholder="Birthdate" name="birthday">
-            <i class="zmdi zmdi-calendar-note input-icon js-btn-calendar"></i>
-          </div>
-          <div class="input-group">
-            <div class="rs-select2 js-select-simple select--no-search">
-              <select name="gender" class="form-control">
-                <option disabled="disabled" selected="selected">Gender</option>
-                <option>Male</option>
-                <option>Female</option>
-                <option>Other</option>
-              </select>
-              <div class="select-dropdown"></div>
+<div class="row" style="margin-top: 140px;">
+  <div class="col-8 m-auto">
+    <div class="myform">
+      <h2 class="text-center">Inscrivez-vous</h2>
+      <form [formGroup]="userForm" (ngSubmit)="onSubmitForm()">
+        <div class="form-group">
+          <input type="email" formControlName="email" placeholder="enter email" class="form-control">
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col">
+              <input type="text" formControlName="firstName" placeholder="enter first name" class="form-control">
+            </div>
+            <div class="col align-right">
+              <input type="text" formControlName="lastName" placeholder="enter last name" class="form-control">
             </div>
           </div>
-          <div class="input-group">
-            <input class="input--style-3" type="email" placeholder="Email" name="email">
-          </div>
-          <div class="input-group">
-            <input class="input--style-3" type="text" placeholder="Phone" name="phone">
-          </div>
-          <div class="p-t-10">
-            <button class="btn btn--pill btn--green" type="submit">Submit</button>
-          </div>
-        </form>
-      </div>
+        </div>
+        <div class="form-group">
+          <input type="text" formControlName="userName" placeholder="enter username:" class="form-control">
+        </div>
+        <div class="form-group">
+          <input type="password" formControlName="password" placeholder="enter password" class="form-control">
+        </div>
+        <div class="col">
+          <button [disabled]="!userForm.valid" class="btn btn-block btn-sm btn-primary"
+            type="submit">Inscription</button>
+        </div>
+      </form>
+    </div>
+    <div class="myform mt-4 _bbb">
+      <p class="text-center">
+        Vous avez un compte ? <a routerLink="/accounts/signin">Connectez-vous</a>
+      </p>
     </div>
   </div>
 </div>

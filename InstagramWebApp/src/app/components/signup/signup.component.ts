@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { $ } from 'protractor';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -8,13 +10,33 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class SignupComponent implements OnInit {
 
-  constructor(private authService: AuthService) { }
+  userForm: FormGroup;
+
+  constructor(
+    private authService: AuthService,
+    private fb: FormBuilder
+  ) { }
 
   ngOnInit(): void {
+    this.initForm();
+  }
+  initForm() {
+    this.userForm = this.fb.group({
+      firstName: [null, Validators.required],
+      password: [null, Validators.required],
+      lastName: [null, Validators.required],
+      email: [null, [Validators.required, Validators.email]],
+      userName: [null, Validators.required]
+    });
   }
 
-  register(user) {
-    return this.authService.register(user);
+  onSubmitForm() {
+    const formValue = this.userForm.value;
+    this.authService.register(formValue)
+      .subscribe(result => {
+        this.userForm.reset();
+        console.log(result);
+      });
   }
 
 }

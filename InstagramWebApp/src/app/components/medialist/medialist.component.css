@@ -1,0 +1,33 @@
+.card {
+    margin-top: 2em;
+  }
+  
+  .card img.card-img-top {
+    height: 500px;
+    background-position: cover;
+    background-repeat: no-repeat;
+  }
+  
+  #location {
+    position: absolute;
+    top: 51px;
+    left: 76px;
+  }
+  
+  .card a {
+    color: rgba(38, 38, 38, 1);
+    font-weight: 600;
+  }
+  
+  .bg-red {
+    /* stroke: red; */
+    fill: rgb(237, 73, 86);
+  }
+  
+  .author__description {
+    margin-top: .6rem;
+  }
+
+  svg:hover{
+      cursor: pointer;
+  }

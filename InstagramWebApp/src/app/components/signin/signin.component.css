@@ -21,7 +21,7 @@ h3 {
   background-color: #fff;
   background-clip: padding-box;
   border: 1px solid rgba(0, 0, 0, .2);
-  border-radius: 1.1rem;
+  border-radius: 1.1rem 1.1rem 0 0;
   outline: 0;
   max-width: 500px;
 }
@@ -32,4 +32,13 @@ h3 {
 
 .mybtn {
   border-radius: 50px;
+}
+
+._bbb {
+  border-radius: 0 0 1.1rem 1.1rem;
+}
+
+.__rg {
+  font-size: 20px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
