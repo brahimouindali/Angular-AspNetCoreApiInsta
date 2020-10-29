@@ -1,5 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { UserMedias } from '../models/usermedias';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +11,7 @@ export class MediaService {
   url = 'https://localhost:44398/api/Medias'
   constructor(private http: HttpClient) { }
 
-  
+
   medias() {
     return this.http.get<any[]>(this.url);
   }
@@ -27,5 +30,9 @@ export class MediaService {
 
   updateMedia(media) {
     return this.http.patch(`${this.url}/media`, media);
+  }
+
+  usermedias(username) {
+    return this.http.get<UserMedias>(`${this.url}/usermedias/${username}`);
   }
 }

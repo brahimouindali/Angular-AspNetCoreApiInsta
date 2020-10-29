@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { $ } from 'protractor';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -14,11 +15,15 @@ export class SignupComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
-    this.initForm();
+    if (localStorage.getItem('token') != null)
+      this.router.navigateByUrl('/home')
+    else
+      this.initForm();
   }
   initForm() {
     this.userForm = this.fb.group({

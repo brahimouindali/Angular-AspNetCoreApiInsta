@@ -9,6 +9,7 @@ using InstagramAPI.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -87,6 +88,26 @@ namespace InstagramAPI.Controllers
             return Ok(media);
         }
 
+
+        private string SaveImage(IFormFile File)
+        {
+            string fileName = null;
+            if (File != null)
+            {
+                var directory = _hosting.WebRootPath + "/img";
+                if (!Directory.Exists(directory))
+                    Directory.CreateDirectory(directory);
+
+                fileName = Guid.NewGuid().ToString() + Path.GetExtension(File.FileName);
+
+                string fullPath = Path.Combine(directory, fileName);
+
+                File.CopyTo(new FileStream(fullPath, FileMode.Create));
+            }
+
+            return fileName;
+        }
+
         // add media
         [Route("media")]
         [HttpPost]
@@ -94,32 +115,21 @@ namespace InstagramAPI.Controllers
         {
             var user = await UserLoggedInAsync();
 
-            if (media.File != null)
+            var fileName = SaveImage(media.File);
+
+            var newMedia = new Media
             {
-                var directory = _hosting.WebRootPath + "/img";
-                if (!Directory.Exists(directory))
-                    Directory.CreateDirectory(directory);
+                AppUserId = user.Id,
+                PublishedAt = DateTime.Now,
+                MediaUrl = fileName,
+                Description = media.Description
+            };
 
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(media.File.FileName);
-
-                string fullPath = Path.Combine(directory, fileName);
-
-                media.File.CopyTo(new FileStream(fullPath, FileMode.Create));
-
-                var newMedia = new Media
-                {
-                    AppUserId = user.Id,
-                    PublishedAt = DateTime.Now,
-                    MediaUrl = fileName,
-                    Description = media.Description
-                };
-
-                _context.Medias.Add(newMedia);
-                await _context.SaveChangesAsync();
-                return Ok(newMedia);
-            }
-            return BadRequest();
+            _context.Medias.Add(newMedia);
+            await _context.SaveChangesAsync();
+            return Ok(newMedia);
         }
+
 
         //delete media
         [HttpDelete]
@@ -193,6 +203,26 @@ namespace InstagramAPI.Controllers
                 return Ok(userLikeMediaToDelete);
             }
             return NotFound();
+        }
+
+        [HttpGet]
+        [Route("usermedias/{username}")]
+        public ActionResult<IEnumerable<UserMedia>> UserMedias(string username)
+        {
+            var user = _context.AppUsers.Where(user => user.UserName == username).FirstOrDefault();
+            var medias = _context.Medias.Where(media => media.AppUserId == user.Id);
+            var countAbonne = _context.UserFollows.Where(uf => uf.AppUserFollowedId == user.Id).Count();
+            var countAbonnement = _context.UserFollows.Where(uf => uf.AppUserFollowId == user.Id).Count();
+
+            var userMedias = new UserMedia
+            {
+                Medias = medias,
+                AppUser = user,
+                CountAbonne = countAbonne,
+                CountAbonnement = countAbonnement,
+                CountMedias = medias.Count()
+            };
+            return Ok(userMedias);
         }
 
     }

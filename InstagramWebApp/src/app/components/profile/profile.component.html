@@ -1,37 +1,76 @@
-<div style="height: 100px;"></div>
-<div class="row">
-  <div class="col-4">
-    <!-- profile picture -->
+ <div style="height: 100px;"></div>
+ <!--
+<div *ngIf="ums$ | async as ums">
+  <div class="row">
+    <div class="col-4">
+      <img src="{{ imgSrc }}" id="__pfl" alt="">
+    </div>
+    <div class="col-8">
+      <div class="row">
+        <div class="col-10">
+          <ul class="nav">
+            <li class="nav-item">
+              <h2 id="_un"> {{ums.appUser.userName}}</h2>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="btn __btn">Modifier profil</a>
+            </li>
+            <li class="nav-item">
+              <svg aria-label="Options" class="_8-yf5 " fill="#262626" height="24" viewBox="0 0 48 48" width="24">
+                <path clip-rule="evenodd"
+                  d="M46.7 20.6l-2.1-1.1c-.4-.2-.7-.5-.8-1-.5-1.6-1.1-3.2-1.9-4.7-.2-.4-.3-.8-.1-1.2l.8-2.3c.2-.5 0-1.1-.4-1.5l-2.9-2.9c-.4-.4-1-.5-1.5-.4l-2.3.8c-.4.1-.8.1-1.2-.1-1.4-.8-3-1.5-4.6-1.9-.4-.1-.8-.4-1-.8l-1.1-2.2c-.3-.5-.8-.8-1.3-.8h-4.1c-.6 0-1.1.3-1.3.8l-1.1 2.2c-.2.4-.5.7-1 .8-1.6.5-3.2 1.1-4.6 1.9-.4.2-.8.3-1.2.1l-2.3-.8c-.5-.2-1.1 0-1.5.4L5.9 8.8c-.4.4-.5 1-.4 1.5l.8 2.3c.1.4.1.8-.1 1.2-.8 1.5-1.5 3-1.9 4.7-.1.4-.4.8-.8 1l-2.1 1.1c-.5.3-.8.8-.8 1.3V26c0 .6.3 1.1.8 1.3l2.1 1.1c.4.2.7.5.8 1 .5 1.6 1.1 3.2 1.9 4.7.2.4.3.8.1 1.2l-.8 2.3c-.2.5 0 1.1.4 1.5L8.8 42c.4.4 1 .5 1.5.4l2.3-.8c.4-.1.8-.1 1.2.1 1.4.8 3 1.5 4.6 1.9.4.1.8.4 1 .8l1.1 2.2c.3.5.8.8 1.3.8h4.1c.6 0 1.1-.3 1.3-.8l1.1-2.2c.2-.4.5-.7 1-.8 1.6-.5 3.2-1.1 4.6-1.9.4-.2.8-.3 1.2-.1l2.3.8c.5.2 1.1 0 1.5-.4l2.9-2.9c.4-.4.5-1 .4-1.5l-.8-2.3c-.1-.4-.1-.8.1-1.2.8-1.5 1.5-3 1.9-4.7.1-.4.4-.8.8-1l2.1-1.1c.5-.3.8-.8.8-1.3v-4.1c.4-.5.1-1.1-.4-1.3zM24 41.5c-9.7 0-17.5-7.8-17.5-17.5S14.3 6.5 24 6.5 41.5 14.3 41.5 24 33.7 41.5 24 41.5z"
+                  fill-rule="evenodd"></path>
+              </svg>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-10 ">
+          <ul class="nav">
+            <li class="nav-item">
+              <span> {{ums.countMedias}}</span> publication
+            </li>
+            <li class="nav-item">
+              <a href="#">
+                <span> {{ums.countAbonne}}</span> abonnés
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#">
+                <span> {{ums.countAbonnement}}</span> abonnements
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-10">
+          <ul class="navbar-nav" style="padding-left:1.3rem;">
+            <li class="nav-item">
+              <h1> <span class="__fn"> {{ums.appUser.fullName}}</span></h1>
+            </li>
+            <li class="nav-item">
+              <span class="__bgp"> {{ums.appUser.biography}}</span>
+            </li>
+            <li class="nav-item">
+              <a class="__link" href="https://{{ums.appUser.webSite}}" target="_blank">{{ums.appUser.webSite}}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+
+    </div>
   </div>
-  <div class="col-8">
-    <div class="row">
-        <div class="col">
-            <!-- username -->
-        </div>
-        <div class="col">
-            <!-- button contenir le text 'modifier le profile' -->
-        </div>
-        <div class="col">
-            <!-- svg parametre icon -->
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <!-- nombre de publications publication -->
-        </div>
-        <div class="col">
-            <!-- nombre d'abonnes abonnés -->
-        </div>
-        <div class="col">
-            <!-- nombre d'abonnements abonnements -->
-        </div>
-    </div>
-    <div class="row">
-        <div class="row">  <!-- full name  -->   </div>
-        <div class="row">  <!-- description -->    </div>
-        <div class="row">
-            
-        </div>
-    </div>
+
+  <div class="card-columns" style="margin-top: 3rem!important;width: 100%;">
+
+    <mat-card *ngFor="let media of ums.medias; let i = index">
+      <img mat-card-image mat-raised-button (click)="onOpenModel(ums, i)" class="card-img-top"
+        src="{{imgPath}}/{{media.mediaUrl}}" alt="{{media.mediaUrl}}" style="height: 23rem;cursor: pointer;">
+    </mat-card>
+
   </div>
-</div>
+
+</div> -->

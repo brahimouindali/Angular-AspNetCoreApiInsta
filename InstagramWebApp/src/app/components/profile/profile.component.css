@@ -1,0 +1,46 @@
+#__pfl {
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+  margin-left: 4rem;
+}
+
+svg {
+  cursor: pointer;
+  height: 40px;
+  width: 90px;
+  padding-left: 0;
+}
+
+.__btn {
+  border: .7px solid rgba(0, 0, 0, .5);
+}
+
+ul.nav>li.nav-item {
+  padding: .9rem 1.3rem;
+  font-size: 20px;
+}
+
+ul.nav>li.nav-item>a {
+  color: rgb(0, 0, 0, .8);
+}
+a {
+  text-decoration: none;
+}
+ul.nav>li.nav-item>a>span,
+ul.nav>li.nav-item>span {
+  color: #000;
+}
+
+#_un {
+  font-weight: 300;
+}
+
+.__fn {
+  font-size: 24px;
+}
+
+.__bgp,
+.__link {
+  font-size: 20px;
+}

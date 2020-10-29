@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
@@ -11,6 +12,8 @@ using InstagramAPI.Models;
 using InstagramAPI.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +30,7 @@ namespace InstagramAPI.Controllers
         private readonly ApplicationDbContext _context;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly UserManager<AppUser> _userManager;
+        private readonly IHostingEnvironment _hosting;
         private readonly IEmailService _emailService;
         private readonly IEmailSender _emailSender;
         private readonly ApplicationSettings _options;
@@ -35,6 +39,7 @@ namespace InstagramAPI.Controllers
             SignInManager<AppUser> signInManager,
             UserManager<AppUser> userManager,
             IOptions<ApplicationSettings> options,
+            IHostingEnvironment hosting,
             IEmailService emailService,
             IEmailSender emailSender
             )
@@ -42,6 +47,7 @@ namespace InstagramAPI.Controllers
             _context = context;
             _signInManager = signInManager;
             _userManager = userManager;
+            _hosting = hosting;
             _emailService = emailService;
             _emailSender = emailSender;
             _options = options.Value;
@@ -58,6 +64,7 @@ namespace InstagramAPI.Controllers
         {
             if (user == null) return BadRequest();
             if (await _userManager.FindByEmailAsync(user.Email) != null) return BadRequest("email already exist!");
+            if (_context.AppUsers.Any(u => u.UserName == user.UserName)) return BadRequest("username already exist!");
             var newUser = new AppUser
             {
                 Email = user.Email,
@@ -173,10 +180,14 @@ namespace InstagramAPI.Controllers
         {
             var sameEmail = true;
             var userToUpdate = await _userManager.FindByIdAsync(model.Id);
+            if (_context.AppUsers.Any(u => u.UserName == model.UserName)) return BadRequest("username already exist!");
             if (!model.Email.Equals(userToUpdate.Email))
             {
                 sameEmail = false;
             }
+
+            var fileName = SaveImage(model.File);
+
             _context.Entry(userToUpdate).State = EntityState.Modified;
             userToUpdate.Biography = model.Biography == null ? userToUpdate.Biography : model.Biography;
             userToUpdate.Email = model.Email == null ? userToUpdate.Email : model.Email;
@@ -187,7 +198,7 @@ namespace InstagramAPI.Controllers
             userToUpdate.LastName = model.LastName == null ? userToUpdate.LastName : model.LastName;
             userToUpdate.WebSite = model.Website == null ? userToUpdate.WebSite : model.Website;
             userToUpdate.PhoneNumber = model.PhoneNumber == null ? userToUpdate.PhoneNumber : model.PhoneNumber;
-            //userToUpdate.RegisteredAt = userToUpdate.RegisteredAt;
+            userToUpdate.ImagePath = fileName == null ? userToUpdate.ImagePath : fileName;
 
             _context.AppUsers.Update(userToUpdate);
             await _context.SaveChangesAsync();
@@ -197,6 +208,25 @@ namespace InstagramAPI.Controllers
                 await SendEmail(userToUpdate);
             }
             return Ok("user has been updated successfully");
+        }
+
+        private string SaveImage(IFormFile File)
+        {
+            string fileName = null;
+            if (File != null)
+            {
+                var directory = _hosting.WebRootPath + "/profile";
+                if (!Directory.Exists(directory))
+                    Directory.CreateDirectory(directory);
+
+                fileName = Guid.NewGuid().ToString() + Path.GetExtension(File.FileName);
+
+                string fullPath = Path.Combine(directory, fileName);
+
+                File.CopyTo(new FileStream(fullPath, FileMode.Create));
+            }
+
+            return fileName;
         }
     }
 }
