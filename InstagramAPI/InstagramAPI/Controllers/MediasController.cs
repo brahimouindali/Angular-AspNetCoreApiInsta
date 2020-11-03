@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using InstagramAPI.Data;
 using InstagramAPI.ModelLogic;
@@ -47,25 +48,54 @@ namespace InstagramAPI.Controllers
                                     .OrderByDescending(m => m.PublishedAt);
 
             var mediaManages = new List<MediaManage>();
+            if (medias.Count() == 0) return NotFound();
+
             foreach (var media in medias)
             {
                 var mediaIsLiked = _context.UserLikeMedias.Any(um => um.AppUserId == user.Id && um.MediaId == media.Id);
+
                 var comments = new List<Comment>();
+
                 var com = _context.Comments.Where(c => c.MediaId == media.Id).FirstOrDefault();
-                var countLikeMedia = _context.UserLikeMedias.Where(cm => cm.MediaId == media.Id).Count();
-                comments.Add(com);
+
+                var userLikeMediaId = _context.UserLikeMedias.Where(cm => cm.MediaId == media.Id).Select(u => u.AppUserId);
+
+                var usersLikeMedia = _context.AppUsers.Where(u => userLikeMediaId.Contains(u.Id));
+
+                if (com != null) comments.Add(com);
+
+                var userIsFollowedMeList = new List<UserIsFollowedMe>();
+
+                foreach (var item in usersLikeMedia)
+                {
+                    var isFollowUser = _context.UserFollows
+                                            .Any(uf => uf.AppUserFollowId == item.Id && user.Id == uf.AppUserFollowedId);
+
+                    var userIsFollowedMe = new UserIsFollowedMe
+                    {
+                        AppUser = item,
+                        IsFollowedMe = isFollowUser
+                    };
+                    userIsFollowedMeList.Add(userIsFollowedMe);
+                }
+
                 var mediaManage = new MediaManage
                 {
                     Media = media,
                     IsLiked = mediaIsLiked,
                     Comments = comments,
                     CountComments = comments.Count,
-                    CountLikes = countLikeMedia
+                    CountLikes = usersLikeMedia.Count(),
+                    AppUser = user,
+                    UserIsFollowedMe = userIsFollowedMeList
                 };
+                //Thread.Sleep(2000);
                 mediaManages.Add(mediaManage);
             }
 
-            return Ok(mediaManages);
+            if (mediaManages != null)
+                return Ok(mediaManages);
+            return NotFound();
         }
 
         //get user logged in

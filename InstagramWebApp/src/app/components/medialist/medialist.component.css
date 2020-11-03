@@ -1,4 +1,4 @@
-.card {
+/* .card {
     margin-top: 2em;
   }
   
@@ -18,16 +18,56 @@
     color: rgba(38, 38, 38, 1);
     font-weight: 600;
   }
-  
-  .bg-red {
-    /* stroke: red; */
-    fill: rgb(237, 73, 86);
-  }
-  
-  .author__description {
+   */
+.bg-red {
+  fill: rgb(237, 73, 86);
+}
+
+/* .author__description {
     margin-top: .6rem;
+  } */
+
+  a {
+    text-decoration: none;
+    color: #000;
+    font-size: 15px;
+    }
+
+  a._um:hover {
+    text-decoration: underline;
   }
 
-  svg:hover{
-      cursor: pointer;
-  }
+svg {
+  cursor: pointer;
+  margin-left: .9rem;
+}
+
+.mat-card-image {
+  margin-bottom: -5px;
+}
+
+#more {
+  right: 6px;
+  top: 16px;
+}
+
+#more,
+#turned-in-out {
+  cursor: pointer;
+  position: absolute;
+}
+
+#turned-in-out {
+  position: absolute;
+  cursor: pointer;
+  right: 6px;
+  top: 5px;
+}
+
+#turned-in-out mat-icon {
+  font-size: 34px;
+}
+
+.example-header-image {
+  background-size: cover;
+}

@@ -1,12 +1,10 @@
 <form [formGroup]="newCommentForm" (ngSubmit)="onSubmit(newCommentForm.value)">
-  <div class="row" style="align-items: center;">
-    <div class="col-10">
-      <textarea formControlName="Comment" placeholder="Ajouter un commentaire..."
-       autocomplete="off" autocorrect="off">
-      </textarea>
-    </div>
-    <div class="col-2">
-      <button type="submit" [disabled]="!newCommentForm.valid" class="btn" style="color:#007bff;">Publier</button>
-    </div>
-  </div>
+
+  <mat-form-field class="example-full-width">
+    <mat-label>Leave a comment</mat-label>
+    <textarea matInput formControlName="Comment" ></textarea>
+  </mat-form-field>
+
+  <button mat-button type="submit" [disabled]="!newCommentForm.valid"
+  color="primary">Publier</button>
 </form>

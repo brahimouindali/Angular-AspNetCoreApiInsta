@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { clear } from 'console';
 import { Observable } from 'rxjs';
 import { MediaService } from 'src/app/services/media.service';
 import { MediaDetailComponent } from '../media-detail/media-detail.component';
@@ -20,7 +21,8 @@ export class ProfileComponent implements OnInit {
   constructor(
     private mediaService: MediaService,
     private route: ActivatedRoute,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -39,17 +41,18 @@ export class ProfileComponent implements OnInit {
       } else {
         this.imgSrc = `${this.profileImgPath}/${ums.appUser.imagePath}`
       }
-    });
+    },
+      () => {
+        this.router.navigateByUrl('p/not-found');
+        console.clear()
+      });
   }
 
-  openDialog(){
-    this.dialog.open(MediaDetailComponent);
-  }
 
   onOpenModel(data, index) {
     let media = data.medias[index];
     const dialogRef = this.dialog.open(MediaDetailComponent, {
-      width: '300px',
+      width: '80%',
       data: { user: data.appUser, media: media }
     })
 

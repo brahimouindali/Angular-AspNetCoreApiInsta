@@ -19,6 +19,8 @@ import { MediaDetailComponent } from './components/media-detail/media-detail.com
 import { AuthInterceptor } from './services/auth.interceptor';
 import { MediaService } from './services/media.service';
 import { AuthService } from './services/auth.service';
+import { NotFoundComponent } from './components/not-found/not-found.component';
+import { SubscribeusersComponent } from './components/subscribeusers/subscribeusers.component';
 
 
 
@@ -33,7 +35,9 @@ import { AuthService } from './services/auth.service';
     MediaComponent,
     CommentformComponent,
     MedialistComponent,
-    MediaDetailComponent
+    MediaDetailComponent,
+    NotFoundComponent,
+    SubscribeusersComponent
   ],
   imports: [
     AppMaterialModule,

@@ -1,0 +1,12 @@
+
+
+button {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+}
+
+mat-card {
+    box-shadow: none !important;
+    padding: 0;
+}

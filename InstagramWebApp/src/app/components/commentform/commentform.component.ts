@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { User } from 'src/app/models/user';
 import { CommentService } from 'src/app/services/comment.service';
 
 @Component({
@@ -10,14 +11,15 @@ import { CommentService } from 'src/app/services/comment.service';
 export class CommentformComponent implements OnInit {
 
   @Input() mediaId: number;
+  @Input() user: User;
+  @Output() notify: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(
     private fb: FormBuilder,
     private commentService: CommentService
   ) { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
   newCommentForm: FormGroup = this.fb.group({
     'Comment': [null, Validators.required]
@@ -25,14 +27,19 @@ export class CommentformComponent implements OnInit {
 
   onSubmit(data) {
     let comment = {
+      appUser: this.user,
       mediaId: this.mediaId,
-      content: data.Comment
+      content: data.Comment,
+      publishedAt: new Date()
     };
     this.commentService.addComment(comment)
-      .subscribe(result => {
+      .subscribe(() => {
+        this.notify.emit(comment)
         this.newCommentForm.reset()
-        console.log(result);
-      }
+      },
+        err => {
+          console.log(err);
+        }
       )
   }
 

@@ -1,6 +1,14 @@
 textarea {
-    resize: none;
+    resize: none !important;
     outline: none;
-    width: 100%;
+    width: 100% !important;
     border: none;
+  }
+
+  .mat-form-field {
+    width: 84%;
+  }
+
+  button {
+    width: 14%;
   }

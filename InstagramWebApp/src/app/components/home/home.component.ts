@@ -9,21 +9,22 @@ import { MediaService } from 'src/app/services/media.service';
 })
 export class HomeComponent implements OnInit {
 
-  medias: any[];
+  medias$;
+  medias;
   user: any;
   now: any = new Date()
+  showSpinner = true;
 
-  constructor(
-    private mediaService: MediaService
-  ) { }
+  constructor(private mediaService: MediaService) { }
 
   ngOnInit(): void {
-    this.mediaService.medias().subscribe(result => {
-      this.medias = result;
-    }, err =>
-      console.error(err)
-    );
+    let title = document.getElementsByTagName('title')[0]
+    title.innerHTML = 'Instagram';
+    
+    this.medias$ = this.mediaService.medias();
+     this.mediaService.medias().subscribe(res => {
+       this.showSpinner = false
+       this.medias = res
+     })
   }
-
-
 }

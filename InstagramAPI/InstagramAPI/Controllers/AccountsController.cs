@@ -166,11 +166,11 @@ namespace InstagramAPI.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet]
         [Route("user")]
-        public async Task<ActionResult<AppUser>> GetUserAsync()
+        public async Task<AppUser> GetUserAsync()
         {
             var userId = User.Claims.First(c => c.Type == "UserId").Value;
             var user = await _userManager.FindByIdAsync(userId);
-            return Ok(user);
+            return user;
         }
 
         [HttpPatch]
@@ -209,6 +209,35 @@ namespace InstagramAPI.Controllers
             }
             return Ok("user has been updated successfully");
         }
+
+        [HttpPost]
+        [Route("followOrUnfollow")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> FollowOrUnfollow(string id)
+        {
+            var user = await GetUserAsync();
+
+            var userToFollowOrDelete = _context.UserFollows
+                .Where(uf => uf.AppUserFollowedId == user.Id && uf.AppUserFollowId == id).FirstOrDefault();
+
+            if (userToFollowOrDelete != null)
+            {
+                _context.UserFollows.Remove(userToFollowOrDelete);
+            }
+            else
+            {
+                var followUser = new UserFollow
+                {
+                    AppUserFollowedId = user.Id,
+                    AppUserFollowId = id
+                };
+                _context.UserFollows.Add(followUser);
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
 
         private string SaveImage(IFormFile File)
         {

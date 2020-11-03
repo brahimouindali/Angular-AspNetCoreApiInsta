@@ -11,6 +11,7 @@ import { AuthService } from 'src/app/services/auth.service';
 export class SigninComponent implements OnInit {
 
   error: string = '';
+  hide = true;
 
   constructor(
     private authService: AuthService,
@@ -25,19 +26,24 @@ export class SigninComponent implements OnInit {
 
   myForm: FormGroup = this.fb.group({
     'email': ['', Validators.required],
-    'password': ['', Validators.compose([Validators.minLength(5), Validators.required, Validators.pattern("[a-zA-Z]+")])]
+    'password': ['', Validators.compose([Validators.minLength(5), Validators.required])]
   });
 
   login(user) {
-    this.authService.login(user).subscribe((data: any) => {
-      localStorage.setItem('token', data.token)
-      this.router.navigateByUrl('/home')
-    },
-      err => {
-        this.error = err.error.message;
-        // console.log(err.error.message);
-      }
-    );
+    if (this.myForm.valid) {
+      this.authService.login(user).subscribe(
+        (data: any) => {
+          localStorage.setItem('token', data.token)
+          this.router.navigateByUrl('/home')
+        },
+        (err) => {
+          this.error = err.error.message;
+        }
+      );
+    }
+    else {
+      console.log(this.myForm);
+    }
   }
 
 }

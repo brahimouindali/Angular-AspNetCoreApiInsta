@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MediaService } from 'src/app/services/media.service';
+import { SubscribeusersComponent } from '../subscribeusers/subscribeusers.component';
 
 @Component({
   selector: 'app-medialist',
@@ -14,27 +16,28 @@ export class MedialistComponent implements OnInit {
   imgPath: string = 'https://localhost:44398/img';
 
   constructor(
-    private mediaService: MediaService
+    private mediaService: MediaService,
+    public dialog: MatDialog
   ) { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {    
+   }
 
-  
+
   LikeImage(id) {
     let media = { id: id };
     if (!this.m.isLiked) {
-      this.mediaService.likeMedia(media).subscribe(() => {
-        this.m.isLiked = true;
-      });
+      this.mediaService.likeMedia(media)
+      this.m.isLiked = true;
+      this.m.countLikes++;
     }
   }
 
   LikeOrDesLikeImage(id) {
     if (this.m.isLiked) {
-      this.mediaService.deslikeMedia(id).subscribe(() => {
-        this.m.isLiked = false;
-      });
+      this.mediaService.deslikeMedia(id);
+      this.m.isLiked = false;
+      this.m.countLikes--;
     } else {
       this.LikeImage(id);
     }
@@ -70,5 +73,17 @@ export class MedialistComponent implements OnInit {
         }
       }
     }
+  }
+
+  onNotifyComment(comment) {
+    this.m.comments.push(comment)
+    console.log(comment)
+  }
+
+  onUserModel(users) {    
+    this.dialog.open(SubscribeusersComponent, {
+      width: "460px",
+      data: users
+    })
   }
 }

@@ -1,4 +1,4 @@
-
+/* 
 a {
   text-decoration: none !important;
 }
@@ -41,4 +41,28 @@ h3 {
 .__rg {
   font-size: 20px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+} */
+/* 
+#myForm {
+  margin: 10% 40%;
+  height: 50vh;
+  border: black 1px solid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+} */
+
+mat-card {
+  max-width: 400px;
+  margin: 2em auto;
+  text-align: center;
+}
+
+mat-form-field {
+  display: block;
+}
+
+.mat-form-field-flex {
+  background-color: #fff !important;
 }

@@ -1,19 +1,22 @@
-<app-media></app-media>
+<!-- <app-media></app-media> -->
 
-<div class="row" style="margin-top: 50px;">
-  <div class="col-8" *ngFor="let m of medias; let i = index">
-
-    <app-medialist [m]="m"></app-medialist>
-  
-  </div>
-
-  <div class="col-4" style="position: fixed;right: 50px;">
-    <div class="card text-left">
-      <div class="card-body">
-        <h4 class="card-title">Title</h4>
-        <p class="card-text">Body</p>
+<div class="container">
+  <div id="__d-flex">
+    <div id="card-container">
+      <!-- <div *ngIf="medias$ | async as medias;"> -->
+      <div *ngIf="!showSpinner">
+        <mat-card class="example-card" *ngFor="let m of medias">
+          <app-medialist [m]="m" ></app-medialist>
+        </mat-card>
+      </div>
+      <!-- </div> -->
+      <div *ngIf="showSpinner">
+        <mat-progress-spinner diameter="70" 
+        mode="indeterminate" value="100"></mat-progress-spinner>
       </div>
     </div>
+    <div id="aside">
+      <h3>HELLO WORLD!</h3>
+    </div>
   </div>
-
 </div>
