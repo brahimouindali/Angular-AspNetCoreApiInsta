@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { MediaDetailComponent } from './components/dialogs/media-detail/media-detail.component';
 import { HomeComponent } from './components/home/home.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { ProfileComponent } from './components/profile/profile.component';
@@ -10,13 +11,13 @@ import { AuthGuard } from './guards/auth.guard';
 const routes: Routes = [
   { path: 'accounts/signup', component: SignupComponent },
   { path: 'accounts/signin', component: SigninComponent },
-  { path: '', canActivate: [AuthGuard], component: HomeComponent },
-  { path: 'home', canActivate: [AuthGuard], component: HomeComponent },  
-  { path: 'inbox', redirectTo: 'home' },
-  // { path: 'inbox',  component: MediaComponent },
+  { path: 'accounts/logout', redirectTo: '/accounts/signin' },
+  { path: 'home', canActivate: [AuthGuard], component: HomeComponent },
   { path: ':id', canActivate: [AuthGuard], component: ProfileComponent },
+  { path: 'p/:id', component: MediaDetailComponent },
   { path: 'p/not-found', component: NotFoundComponent },
-  { path: '**', redirectTo: 'not-found' }
+  { path: '', canActivate: [AuthGuard], component: HomeComponent },
+  { path: '**', redirectTo: 'p/not-found' }
 ];
 
 @NgModule({

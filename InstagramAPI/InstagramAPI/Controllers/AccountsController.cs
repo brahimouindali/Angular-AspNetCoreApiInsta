@@ -28,35 +28,47 @@ namespace InstagramAPI.Controllers
     public class AccountsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly SignInManager<AppUser> _signInManager;
         private readonly UserManager<AppUser> _userManager;
         private readonly IHostingEnvironment _hosting;
-        private readonly IEmailService _emailService;
         private readonly IEmailSender _emailSender;
         private readonly ApplicationSettings _options;
 
         public AccountsController(ApplicationDbContext context,
-            SignInManager<AppUser> signInManager,
             UserManager<AppUser> userManager,
             IOptions<ApplicationSettings> options,
             IHostingEnvironment hosting,
-            IEmailService emailService,
             IEmailSender emailSender
             )
         {
             _context = context;
-            _signInManager = signInManager;
             _userManager = userManager;
             _hosting = hosting;
-            _emailService = emailService;
             _emailSender = emailSender;
             _options = options.Value;
         }
 
+
+        [HttpGet]
+        [Route("ur")]
+        public async Task<IEnumerable<AppUser>> GetUsersAsync() =>
+           await _context.AppUsers.OrderByDescending(u => u.RegisteredAt).ToListAsync();
+
+
         [HttpGet]
         [Route("users")]
-        public async Task<IEnumerable<AppUser>> GetUsers() =>
-            await _context.AppUsers.OrderByDescending(u => u.RegisteredAt).ToListAsync();
+        public async Task<ActionResult<IEnumerable<UsersAndUserLoggedIn>>> GetUsers()
+        {
+            var user = await GetUserAsync();
+
+            var users = await _context.AppUsers.OrderByDescending(u => u.RegisteredAt).ToListAsync();
+
+            var usersAndUserLoggedIn = new UsersAndUserLoggedIn
+            {
+                AppUser = user,
+                AppUsers = users
+            };
+            return Ok(usersAndUserLoggedIn);
+        }
 
         [HttpPost]
         [Route("register")]
@@ -213,12 +225,12 @@ namespace InstagramAPI.Controllers
         [HttpPost]
         [Route("followOrUnfollow")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> FollowOrUnfollow(string id)
+        public async Task<IActionResult> FollowOrUnfollow(UserModel model)
         {
             var user = await GetUserAsync();
 
             var userToFollowOrDelete = _context.UserFollows
-                .Where(uf => uf.AppUserFollowedId == user.Id && uf.AppUserFollowId == id).FirstOrDefault();
+                .Where(uf => uf.AppUserFollowedId == model.Id && uf.AppUserFollowId == user.Id).FirstOrDefault();
 
             if (userToFollowOrDelete != null)
             {
@@ -228,8 +240,8 @@ namespace InstagramAPI.Controllers
             {
                 var followUser = new UserFollow
                 {
-                    AppUserFollowedId = user.Id,
-                    AppUserFollowId = id
+                    AppUserFollowedId = model.Id,
+                    AppUserFollowId = user.Id
                 };
                 _context.UserFollows.Add(followUser);
             }
@@ -237,7 +249,6 @@ namespace InstagramAPI.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
-
 
         private string SaveImage(IFormFile File)
         {

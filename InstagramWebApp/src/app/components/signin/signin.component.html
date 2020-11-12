@@ -1,11 +1,11 @@
 <mat-card>
   <mat-card-content>
-    <div color="warn" *ngIf="error">{{error}}</div>
     <form [formGroup]="myForm" (ngSubmit)="login(myForm.value)">
       <h2>Log In</h2>
       <mat-error *ngIf="error">
         The username and password were not recognised
       </mat-error>
+      
       <mat-form-field appearance="standard">
         <input matInput placeholder="Email" formControlName="email">
         <mat-error>

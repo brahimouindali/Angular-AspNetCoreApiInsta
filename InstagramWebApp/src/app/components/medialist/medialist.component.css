@@ -1,41 +1,16 @@
-/* .card {
-    margin-top: 2em;
-  }
-  
-  .card img.card-img-top {
-    height: 500px;
-    background-position: cover;
-    background-repeat: no-repeat;
-  }
-  
-  #location {
-    position: absolute;
-    top: 51px;
-    left: 76px;
-  }
-  
-  .card a {
-    color: rgba(38, 38, 38, 1);
-    font-weight: 600;
-  }
-   */
 .bg-red {
   fill: rgb(237, 73, 86);
 }
 
-/* .author__description {
-    margin-top: .6rem;
-  } */
+a {
+  text-decoration: none;
+  color: #000;
+  font-size: 15px;
+}
 
-  a {
-    text-decoration: none;
-    color: #000;
-    font-size: 15px;
-    }
-
-  a._um:hover {
-    text-decoration: underline;
-  }
+a._um:hover {
+  text-decoration: underline;
+}
 
 svg {
   cursor: pointer;
@@ -70,4 +45,12 @@ svg {
 
 .example-header-image {
   background-size: cover;
+}
+
+mat-divider {
+  margin-top: 1px;
+}
+
+video::-webkit-media-controls-fullscreen-button {
+  display: none !important;
 }

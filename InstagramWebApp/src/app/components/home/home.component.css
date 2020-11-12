@@ -9,6 +9,7 @@ mat-progress-spinner {
 
 mat-card {
   margin-bottom: 4rem;
+  padding-bottom: 0;
 }
 
 
@@ -71,11 +72,11 @@ mat-card {
 
 @media(min-width: 1000px) {
   .container {
-    margin: 0 20%;
+    margin: 0 12%;
   }
 
   #card-container {
-    width: 65%;
+    width: 60%;
   }
 
   #aside {

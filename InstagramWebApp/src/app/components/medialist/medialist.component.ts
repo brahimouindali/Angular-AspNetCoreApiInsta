@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MediaService } from 'src/app/services/media.service';
-import { SubscribeusersComponent } from '../subscribeusers/subscribeusers.component';
+import { ManagePostComponent } from '../dialogs/manage-post/manage-post.component';
+import { SubscribeusersComponent } from '../dialogs/subscribeusers/subscribeusers.component';
 
 @Component({
   selector: 'app-medialist',
@@ -13,33 +14,48 @@ export class MedialistComponent implements OnInit {
   @Input() m: any;
   user: any;
   now: any = new Date()
-  imgPath: string = 'https://localhost:44398/img';
+  imgPath: string = 'https://localhost:44398/img/';
+  videoPath: string = 'https://localhost:44398/video/';
+  imgProfilePath = 'https://localhost:44398/profile/';
+  noImg = '../../../assets/no-img.png';
 
   constructor(
     private mediaService: MediaService,
     public dialog: MatDialog
   ) { }
 
-  ngOnInit(): void {    
-   }
+  ngOnInit(): void {
+    // console.log(this.m.media.appUser.id); // follow or undollow   
+  }
 
 
-  LikeImage(id) {
-    let media = { id: id };
+  LikeMedia(id) {
     if (!this.m.isLiked) {
+      let media = { id: id };
       this.mediaService.likeMedia(media)
       this.m.isLiked = true;
       this.m.countLikes++;
+
+      this.m.meFollowUsersList.push({
+        appUser: this.m.appUser,
+        isMe: true,
+        isFollowedMe: false
+      });
     }
   }
 
-  LikeOrDesLikeImage(id) {
+  LikeOrDesLikeMedia(id) {
     if (this.m.isLiked) {
       this.mediaService.deslikeMedia(id);
       this.m.isLiked = false;
       this.m.countLikes--;
+      this.m.meFollowUsersList.pop({
+        appUser: this.m.appUser,
+        isMe: true,
+        isFollowedMe: false
+      });
     } else {
-      this.LikeImage(id);
+      this.LikeMedia(id);
     }
   }
 
@@ -77,13 +93,26 @@ export class MedialistComponent implements OnInit {
 
   onNotifyComment(comment) {
     this.m.comments.push(comment)
-    console.log(comment)
   }
 
-  onUserModel(users) {    
+  getImagePath(url) {
+    return url == null ? this.noImg : this.imgProfilePath + url;
+  }
+
+  // click more_horiz icon
+  onModelOpen() {
+    this.dialog.open(ManagePostComponent, {
+      width: "460px",
+      data: this.m.media.appUser.id
+    })
+  }
+
+  // click likers
+  onUserModel() {
     this.dialog.open(SubscribeusersComponent, {
       width: "460px",
-      data: users
+      height: "auto",
+      data: this.m.meFollowUsersList
     })
   }
 }

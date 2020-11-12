@@ -15,5 +15,6 @@ namespace InstagramAPI.Models
         public AppUser AppUser { get; set; }
         [Required]
         public string AppUserId { get; set; }
+        public bool IsVideo { get; set; }
     }
 }

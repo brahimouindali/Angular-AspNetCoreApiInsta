@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { clear } from 'console';
 import { Observable } from 'rxjs';
 import { MediaService } from 'src/app/services/media.service';
-import { MediaDetailComponent } from '../media-detail/media-detail.component';
+import { MediaDetailComponent } from '../dialogs/media-detail/media-detail.component';
 
 @Component({
   selector: 'app-profile',
@@ -25,22 +25,16 @@ export class ProfileComponent implements OnInit {
     private router: Router
   ) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void {  
+    let card: any = document.getElementsByTagName('mat-card') ; console.log(card);    
     const username = this.route.snapshot.params.id;
     this.usermedias(username);
   }
   usermedias(username) {
     this.ums$ = this.mediaService.usermedias(username);
-    this.ums$.subscribe(ums => {
+    this.ums$.subscribe(res => {
       let title: any = document.getElementsByTagName('title')[0];
-      title.innerText = `${ums.appUser.fullName} (@${username}) • Photos et vidéos Instagram`;
-      if (ums.appUser.imagePath == null) {
-        this.profileImgPath = '../../../assets';
-        ums.appUser.imagePath = 'profile.png';
-        this.imgSrc = `${this.profileImgPath}/${ums.appUser.imagePath}`
-      } else {
-        this.imgSrc = `${this.profileImgPath}/${ums.appUser.imagePath}`
-      }
+      title.innerText = `${res.appUser.fullName} (@${username}) • Photos et vidéos Instagram`;
     },
       () => {
         this.router.navigateByUrl('p/not-found');
@@ -48,18 +42,19 @@ export class ProfileComponent implements OnInit {
       });
   }
 
-
-  onOpenModel(data, index) {
-    let media = data.medias[index];
-    const dialogRef = this.dialog.open(MediaDetailComponent, {
-      width: '80%',
-      data: { user: data.appUser, media: media }
-    })
-
-    dialogRef.afterClosed().subscribe(() => {
-      console.log(`The dialog was closed`);
-    });
+  getImageProfilePath(url) {
+    if (url == null)
+    return '../../../assets/no-img.png';
+  return `${this.profileImgPath}/${url}`;
   }
 
+  getImageMediaPath(url) {
+    if (url == null)
+      return '../../../assets/no-img.png';
+    return `${this.imgPath}/${url}`;
+  }
 
+  onOpenModel(data) {
+    console.log(data);
+  }
 }

@@ -13,4 +13,7 @@ export class AccountService {
     return this.http.post(`${this.url}/followOrUnfollow`, { id: id })
   }
 
+  users() {
+    return this.http.get<any[]>(`${this.url}/users`);
+  }
 }

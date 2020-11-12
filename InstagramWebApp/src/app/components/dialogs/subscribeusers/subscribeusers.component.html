@@ -1,0 +1,21 @@
+<mat-icon color="warn" (click)="onModelClose()">close</mat-icon>
+
+<h2 mat-dialog-title id="title">Mentions J’aime</h2>
+<div mat-dialog-content>
+  <mat-divider style="margin-bottom: 1rem;"></mat-divider>
+  <mat-card *ngFor="let user of data; let i = index">
+    <mat-card-header>
+      <div mat-card-avatar [ngStyle]="{'background': 'url(' + getImgePath(user.appUser.imagePath) + ')'}">
+      </div>
+      <mat-card-title>{{user.appUser.userName}}</mat-card-title>
+      <mat-card-subtitle>{{user.appUser.fullName}}</mat-card-subtitle>
+
+      <div *ngIf="!user.isMe">
+        <button mat-raised-button color="primary" *ngIf="!user.iFollowedUser"
+          (click)="onFollowOrUnfollow(user.appUser.id, i)">S'abonner</button>
+        <button mat-raised-button *ngIf="user.iFollowedUser"
+          (click)="onFollowOrUnfollow(user.appUser.id, i)">Abonné(e)</button>
+      </div>
+    </mat-card-header>
+  </mat-card>
+</div>

@@ -25,4 +25,8 @@ export class AuthService {
     return this.http.get(`${this.url}/user`);
   }
 
+  isAuthenticated() {
+    return localStorage.getItem('token') != null ? true : false;
+  }
+
 }

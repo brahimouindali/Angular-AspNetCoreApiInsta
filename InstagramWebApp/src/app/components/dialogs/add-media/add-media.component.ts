@@ -3,11 +3,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MediaService } from 'src/app/services/media.service';
 
 @Component({
-  selector: 'app-media',
-  templateUrl: './media.component.html',
-  styleUrls: ['./media.component.css']
+  selector: 'add-media',
+  templateUrl: './add-media.component.html',
+  styleUrls: ['./add-media.component.css']
 })
-export class MediaComponent implements OnInit {
+export class AddMediaComponent implements OnInit {
 
   @ViewChild('fileInput') fileInput: ElementRef;
   newMediaForm: FormGroup;

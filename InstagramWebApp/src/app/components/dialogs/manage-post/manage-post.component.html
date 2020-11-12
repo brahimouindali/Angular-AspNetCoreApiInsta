@@ -1,0 +1,43 @@
+<mat-dialog-content>
+  <mat-list role="list">
+    <mat-list-item role="listitem" style="color: red;">
+      <button mat-button style="width: 100%;"> Signaler </button>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+    <mat-list-item role="listitem" (click)="onUnfollow(data)" style="color: red;">
+      <button mat-button style="width: 100%;">
+        Se désabonner
+      </button>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+    <mat-list-item role="listitem">
+      <button mat-button style="width: 100%;">
+        Accéder à la publication
+      </button>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+    <mat-list-item role="listitem">
+      <button mat-button style="width: 100%;">
+        Share to..
+      </button>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+    <mat-list-item role="listitem">
+      <button mat-button style="width: 100%;">
+        Copier le lien
+      </button>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+    <mat-list-item role="listitem">
+      <button mat-button style="width: 100%;">
+        Intégrer
+      </button>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+    <mat-list-item role="listitem" (click)="onModelClose()">
+      <button mat-button style="width: 100%;">
+        Annuler
+      </button>
+    </mat-list-item>
+  </mat-list>
+</mat-dialog-content>

@@ -56,27 +56,30 @@ namespace InstagramAPI.Controllers
 
                 var comments = new List<Comment>();
 
-                var com = _context.Comments.Where(c => c.MediaId == media.Id).FirstOrDefault();
+                var com = _context.Comments.Where(c => c.MediaId == media.Id)
+                    .Include(c => c.AppUser).FirstOrDefault();
 
                 var userLikeMediaId = _context.UserLikeMedias.Where(cm => cm.MediaId == media.Id).Select(u => u.AppUserId);
 
-                var usersLikeMedia = _context.AppUsers.Where(u => userLikeMediaId.Contains(u.Id));
+                var usersLikeMedia = _context.AppUsers
+                    .Where(u => userLikeMediaId.Contains(u.Id));// list of users who liked this media
 
                 if (com != null) comments.Add(com);
 
-                var userIsFollowedMeList = new List<UserIsFollowedMe>();
+                var meFollowUsersList = new List<MeFollowUser>();
 
-                foreach (var item in usersLikeMedia)
+                foreach (var us in usersLikeMedia)
                 {
-                    var isFollowUser = _context.UserFollows
-                                            .Any(uf => uf.AppUserFollowId == item.Id && user.Id == uf.AppUserFollowedId);
+                    var iFollowUser = _context.UserFollows
+                                            .Any(uf => uf.AppUserFollowId == user.Id && us.Id == uf.AppUserFollowedId);
 
-                    var userIsFollowedMe = new UserIsFollowedMe
+                    var meFollowUser = new MeFollowUser
                     {
-                        AppUser = item,
-                        IsFollowedMe = isFollowUser
+                        AppUser = us,
+                        IFollowedUser = iFollowUser,
+                        IsMe = user.Id == us.Id
                     };
-                    userIsFollowedMeList.Add(userIsFollowedMe);
+                    meFollowUsersList.Add(meFollowUser);
                 }
 
                 var mediaManage = new MediaManage
@@ -86,8 +89,8 @@ namespace InstagramAPI.Controllers
                     Comments = comments,
                     CountComments = comments.Count,
                     CountLikes = usersLikeMedia.Count(),
-                    AppUser = user,
-                    UserIsFollowedMe = userIsFollowedMeList
+                    AppUser = user, // user logged in
+                    MeFollowUsersList = meFollowUsersList // list of the followers
                 };
                 //Thread.Sleep(2000);
                 mediaManages.Add(mediaManage);
@@ -119,12 +122,28 @@ namespace InstagramAPI.Controllers
         }
 
 
-        private string SaveImage(IFormFile File)
+        private FileType SaveImage(IFormFile File)
         {
-            string fileName = null;
-            if (File != null)
+            var directory = String.Empty;
+            var isVideo = false;
+            var type = File.ContentType;
+            var t = type.Split("/")[0];
+            switch (t)
             {
-                var directory = _hosting.WebRootPath + "/img";
+                case "video":
+                    directory = _hosting.WebRootPath + "/video";
+                    isVideo = true;
+                    break;
+                case "image":
+                    directory = _hosting.WebRootPath + "/img";
+                    break;
+                default:
+                    break;
+            }
+
+            string fileName = String.Empty;
+            if (File != null && directory != String.Empty)
+            {
                 if (!Directory.Exists(directory))
                     Directory.CreateDirectory(directory);
 
@@ -134,8 +153,13 @@ namespace InstagramAPI.Controllers
 
                 File.CopyTo(new FileStream(fullPath, FileMode.Create));
             }
+            var fileType = new FileType
+            {
+                FileName = fileName,
+                IsVideo = isVideo
+            };
 
-            return fileName;
+            return fileType.FileName != String.Empty ? fileType : null;
         }
 
         // add media
@@ -145,14 +169,16 @@ namespace InstagramAPI.Controllers
         {
             var user = await UserLoggedInAsync();
 
-            var fileName = SaveImage(media.File);
+            var file = SaveImage(media.File);
+            if (file == null) return BadRequest();
 
             var newMedia = new Media
             {
                 AppUserId = user.Id,
                 PublishedAt = DateTime.Now,
-                MediaUrl = fileName,
-                Description = media.Description
+                MediaUrl = file.FileName,
+                Description = media.Description,
+                IsVideo = file.IsVideo
             };
 
             _context.Medias.Add(newMedia);
@@ -252,7 +278,7 @@ namespace InstagramAPI.Controllers
                 CountAbonnement = countAbonnement,
                 CountMedias = medias.Count()
             };
-            return Ok(userMedias);
+            return Ok(userMedias); // profile component
         }
 
     }

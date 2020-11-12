@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -12,16 +12,19 @@ export class SigninComponent implements OnInit {
 
   error: string = '';
   hide = true;
+  returnUrl: string;
 
   constructor(
     private authService: AuthService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     if (localStorage.getItem('token') != null)
-      this.router.navigate(['/home'])
+      this.router.navigateByUrl(this.returnUrl)
   }
 
   myForm: FormGroup = this.fb.group({
@@ -34,7 +37,7 @@ export class SigninComponent implements OnInit {
       this.authService.login(user).subscribe(
         (data: any) => {
           localStorage.setItem('token', data.token)
-          this.router.navigateByUrl('/home')
+          this.router.navigateByUrl(this.returnUrl)
         },
         (err) => {
           this.error = err.error.message;

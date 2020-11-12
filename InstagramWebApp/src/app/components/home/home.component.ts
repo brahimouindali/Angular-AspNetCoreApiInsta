@@ -9,7 +9,7 @@ import { MediaService } from 'src/app/services/media.service';
 })
 export class HomeComponent implements OnInit {
 
-  medias$;
+  // medias$;
   medias;
   user: any;
   now: any = new Date()
@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit {
     let title = document.getElementsByTagName('title')[0]
     title.innerHTML = 'Instagram';
     
-    this.medias$ = this.mediaService.medias();
+    // this.medias$ = this.mediaService.medias();
      this.mediaService.medias().subscribe(res => {
        this.showSpinner = false
        this.medias = res

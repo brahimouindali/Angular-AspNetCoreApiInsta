@@ -21,11 +21,13 @@ export class MediaService {
   }
 
   likeMedia(media) {
-    return this.http.post(`${this.url}/likemedia`, media);
+    return this.http.post(`${this.url}/likemedia`, media)
+    .subscribe();
   }
 
   deslikeMedia(id) {
-    return this.http.delete(`${this.url}/deslikemedia/${id}`);
+    return this.http.delete(`${this.url}/deslikemedia/${id}`)
+    .subscribe();
   }
 
   updateMedia(media) {

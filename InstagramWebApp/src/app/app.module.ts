@@ -11,16 +11,17 @@ import { SigninComponent } from './components/signin/signin.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { NavComponent } from './components/nav/nav.component';
 import { ProfileComponent } from './components/profile/profile.component';
-import { MediaComponent } from './components/media/media.component';
 import { CommentformComponent } from './components/commentform/commentform.component';
 import { MedialistComponent } from './components/medialist/medialist.component';
-import { MediaDetailComponent } from './components/media-detail/media-detail.component';
 
 import { AuthInterceptor } from './services/auth.interceptor';
 import { MediaService } from './services/media.service';
 import { AuthService } from './services/auth.service';
 import { NotFoundComponent } from './components/not-found/not-found.component';
-import { SubscribeusersComponent } from './components/subscribeusers/subscribeusers.component';
+import { SubscribeusersComponent } from './components/dialogs/subscribeusers/subscribeusers.component';
+import { AddMediaComponent } from './components/dialogs/add-media/add-media.component';
+import { ManagePostComponent } from './components/dialogs/manage-post/manage-post.component';
+import { MediaDetailComponent } from './components/dialogs/media-detail/media-detail.component';
 
 
 
@@ -32,12 +33,13 @@ import { SubscribeusersComponent } from './components/subscribeusers/subscribeus
     SignupComponent,
     NavComponent,
     ProfileComponent,
-    MediaComponent,
     CommentformComponent,
     MedialistComponent,
     MediaDetailComponent,
     NotFoundComponent,
-    SubscribeusersComponent
+    SubscribeusersComponent,
+    AddMediaComponent,
+    ManagePostComponent
   ],
   imports: [
     AppMaterialModule,
