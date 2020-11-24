@@ -1,7 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { User } from 'src/app/models/user';
+import { Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
 import { AccountService } from 'src/app/services/account.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { Urls } from 'src/app/SETTINGS/URLS';
+import { FormControl } from '@angular/forms';
+
 
 @Component({
   selector: 'app-nav',
@@ -13,9 +19,8 @@ export class NavComponent implements OnInit {
   input: any;
   value = '';
   data$: any;
-  d: any;
-  imagePath = 'https://localhost:44398/profile/';
-  no_img = '../../../assets/no-img.png'
+  usersList;
+  filteredUsers: Observable<User[]>
 
   constructor(
     private accountService: AccountService,
@@ -25,26 +30,51 @@ export class NavComponent implements OnInit {
   ngOnInit(): void {
     this.initDomElement();
     this.data$ = this.accountService.users();
+    this.accountService.users().subscribe((res: any) => {
+      this.usersList = res.appUsers;
+      this.filteredUsers = this.control.valueChanges.pipe(
+        startWith(''),
+        map(val => this._filter(val))
+      );
+    });
   }
 
   getImagePath(path) {
     if (path != null)
-      return this.imagePath + path;
-    return this.no_img;
+      return Urls.profilePath + path;
+    return Urls.noImg;
   }
 
-  keyPress(event: KeyboardEvent) {
-    // this.value += event.key;
+  keyDown(event: KeyboardEvent) {
+    this.value += event.key;
     // console.log(this.value);
   }
+
+
+  control = new FormControl();
+
+  private _filter(value: string): User[] {
+    const filterValue = this._normalizeValue(value);
+    return this.usersList.filter(user => this._normalizeValue(user.userName).includes(filterValue));
+  }
+
+  private _normalizeValue(value: string): string {
+    return value != null ? value.toLowerCase().replace(/\s/g, '') : '';
+  }
+
 
   initDomElement() {
     this.icon = document.getElementById('icon');
     this.input = document.getElementById('_input');
   }
 
+  
+  getUserPath(url) {
+    
+  }
+
   onInputFocus() {
-    if (this.value == '') {
+    if (this.control.value == '') {
       this.input.classList.add('br-0');
     } else {
       this.input.classList.remove('br-0');
@@ -54,17 +84,16 @@ export class NavComponent implements OnInit {
   }
 
   onInputBlur() {
-    if (this.value == '') {
+    if (this.control.value == '') {
       this.icon.classList.remove('w-12');
-      this.input.classList.remove('w-88');
-      this.input.classList.remove('br-0');
+      this.input.classList.remove('w-88', 'br-0');
     } else {
       this.input.classList.add('br-0');
     }
   }
 
   onClearInput() {
-    this.value = '';
+    this.control.reset()
     this.input.classList.remove('br-0');
   }
 

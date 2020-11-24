@@ -1,17 +1,17 @@
 <mat-card-header>
   <div mat-card-avatar class="example-header-image"
-    [ngStyle]="{'background-image': 'url(' + getImagePath(m.media.appUser.imagePath) + ')'}"></div>
+    [ngStyle]="{'background-image': 'url(' + getProfilePath(m.media.appUser.imagePath) + ')'}"></div>
 
   <mat-card-title>
     <a routerLink="/{{m.media.appUser.userName}}" class="_um">{{m.media.appUser.userName}}</a>
   </mat-card-title>
   <mat-card-subtitle>Casablanca</mat-card-subtitle>
-  <mat-icon id="more" (click)="onModelOpen()">more_horiz</mat-icon>
+  <mat-icon id="more" (click)="onModelOpen(m.media)">more_horiz</mat-icon>
 </mat-card-header>
-<img *ngIf="!m.media.isVideo" mat-card-image src="{{imgPath}}/{{ m.media.mediaUrl }}" (dblclick)="LikeMedia(m.media.id)"
+<img *ngIf="!m.media.isVideo" mat-card-image [src]="getMediaUrl(m.media.mediaUrl) " (dblclick)="LikeMedia(m.media.id)"
   alt="Photo of {{m.media.appUser.userName}}">
 
-<video *ngIf="m.media.isVideo" mat-card-image src="{{videoPath}}/{{ m.media.mediaUrl }}" allofullscreen="false"
+<video *ngIf="m.media.isVideo" mat-card-image [src]="getVideoUrl(m.media.mediaUrl)" allofullscreen="false"
   (dblclick)="LikeMedia(m.media.id)" controls></video>
 
 <mat-card-actions style="position: relative;margin-bottom: 5px;">

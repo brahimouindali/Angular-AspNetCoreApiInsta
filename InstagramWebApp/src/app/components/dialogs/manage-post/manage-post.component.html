@@ -23,7 +23,8 @@
     </mat-list-item>
     <mat-divider></mat-divider>
     <mat-list-item role="listitem">
-      <button mat-button style="width: 100%;">
+      <button mat-button style="width: 100%;" [cdkCopyToClipboard]="value" 
+      (click)="openSnackBar()">
         Copier le lien
       </button>
     </mat-list-item>

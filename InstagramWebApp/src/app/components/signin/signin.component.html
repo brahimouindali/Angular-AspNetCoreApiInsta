@@ -5,87 +5,37 @@
       <mat-error *ngIf="error">
         The username and password were not recognised
       </mat-error>
-      
+
       <mat-form-field appearance="standard">
         <input matInput placeholder="Email" formControlName="email">
         <mat-error>
           Please provide a valid email address
         </mat-error>
       </mat-form-field>
-      
+
       <mat-form-field appearance="standard">
         <mat-label>Enter your password</mat-label>
         <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
-        <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hide">
+          <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
         <mat-error>
           Please provide a valid password (at least 6 charactere)
         </mat-error>
       </mat-form-field>
-
-
-      <button mat-raised-button type="submit" color="primary">Login</button>
+      <button style="width: 100%" mat-raised-button type="submit" color="primary"
+        [disabled]="!myForm.valid">Login</button>
     </form>
   </mat-card-content>
 </mat-card>
 
-
-
-<!-- <div id="myForm">
-<div class="alert alert-danger" *ngIf="error">{{error}}</div>
-<form [formGroup]="myForm" (ngSubmit)="login(myForm.value)">
-  <mat-form-field>
-    <mat-label>Email</mat-label>
-    <input matInput type="email" formControlName="email">
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Password</mat-label>
-    <input matInput type="password" formControlName="password">
-  </mat-form-field>
-  <button mat-raised-button>Login</button>
-</form>
-</div> -->
-
-
-
-
-
-
-
-<!-- 
-<div class="row mx-auto" style="margin-top: 140px;">
-  <div class="col offset-3">
-    <div class="myform">
-      <div class="mb-3">
-        <div class="col-12 text-center">
-          <h1>Login</h1>
-        </div>
-      </div>
-      <div class="alert alert-danger" *ngIf="error">{{error}}</div>
-      <form [formGroup]="myForm" (ngSubmit)="login(myForm.value)">
-        <div class="form-group">
-          <label for="email">Email address</label>
-          <input type="email" class="form-control" formControlName="email" id="email" placeholder="Enter email">
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" formControlName="password" class="form-control"
-            placeholder="Enter Password">
-        </div>
-        <div class="form-group">
-          <p class="text-center">By signing you accept our <a href="#">Terms Of Use</a></p>
-        </div>
-        <div class="col-md-12 text-center ">
-          <button type="submit" class=" btn btn-block mybtn btn-primary tx-tfm">Login</button>
-        </div>
-      </form>
-    </div>
-    <div class="myform mt-4 _bbb">
-      <p class="text-center">
-        Vous n’avez pas de compte ? <a routerLink="/accounts/signup">Inscrivez-vous</a>
-      </p>
-    </div>
-
-  </div>
-</div> -->
+<mat-card>
+  <mat-card-header>
+    <mat-card-subtitle>
+      <span>
+        Vous n’avez pas de compte &nbsp;?&nbsp; <a routerLink="/accounts/signup" id="_sign_up">Inscrivez-vous</a>
+      </span>
+    </mat-card-subtitle>
+  </mat-card-header>
+</mat-card>

@@ -34,8 +34,10 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import {ClipboardModule} from '@angular/cdk/clipboard';
 
-const material = [
+const materialModules = [
+  ClipboardModule,
   CommonModule,
   BrowserModule,
   BrowserAnimationsModule,
@@ -73,7 +75,7 @@ const material = [
 ];
 
 @NgModule({
-  imports: [material],
-  exports: [material]
+  imports: [materialModules],
+  exports: [materialModules]
 })
 export class AppMaterialModule { }

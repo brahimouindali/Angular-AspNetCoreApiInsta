@@ -1,8 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MediaService } from 'src/app/services/media.service';
 import { ManagePostComponent } from '../dialogs/manage-post/manage-post.component';
 import { SubscribeusersComponent } from '../dialogs/subscribeusers/subscribeusers.component';
+import { Urls } from '../../SETTINGS/URLS';
 
 @Component({
   selector: 'app-medialist',
@@ -14,10 +15,6 @@ export class MedialistComponent implements OnInit {
   @Input() m: any;
   user: any;
   now: any = new Date()
-  imgPath: string = 'https://localhost:44398/img/';
-  videoPath: string = 'https://localhost:44398/video/';
-  imgProfilePath = 'https://localhost:44398/profile/';
-  noImg = '../../../assets/no-img.png';
 
   constructor(
     private mediaService: MediaService,
@@ -25,7 +22,7 @@ export class MedialistComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // console.log(this.m.media.appUser.id); // follow or undollow   
+    // console.log(this.m.media); // follow or unfollow   
   }
 
 
@@ -92,18 +89,27 @@ export class MedialistComponent implements OnInit {
   }
 
   onNotifyComment(comment) {
+    this.m.countComments++;
     this.m.comments.push(comment)
   }
 
-  getImagePath(url) {
-    return url == null ? this.noImg : this.imgProfilePath + url;
+  getProfilePath(url) {
+    return url == null ? Urls.noImg : Urls.profilePath + url;
+  }
+
+  getMediaUrl(url) {
+    return Urls.imagePath + url;
+  }
+
+  getVideoUrl(url) {
+    return Urls.videoPath + url;
   }
 
   // click more_horiz icon
-  onModelOpen() {
+  onModelOpen(media) {
     this.dialog.open(ManagePostComponent, {
       width: "460px",
-      data: this.m.media.appUser.id
+      data: media
     })
   }
 

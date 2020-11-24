@@ -1,6 +1,6 @@
 .container {
   margin: 0;
-  margin-top: -3.8rem;
+  margin-top: -46px !important;
 }
 
 mat-card {
@@ -8,18 +8,58 @@ mat-card {
   height: 100%;
 }
 
+.img {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+video {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.row {
+  /* margin-top: -12px; */
+  display: flex;
+}
+
+.r_first {
+  padding: 20px 0;
+}
+
+#img_avatar {
+  width: 50%;
+  border-radius: 50%;
+}
+
 img:hover {
   cursor: pointer;
 }
 
-@media(min-width: 670px) {
+.mr div {
+  margin-right: 2.7rem;
+}
+
+@media(min-width: 620px) {
   .container {
-    margin: 0 1rem;
+    margin: 0 4%;
   }
 }
 
-@media(min-width: 881px) {
+@media(min-width: 900px) {
   .container {
     margin: 0 8%;
+  }
+}
+
+@media(min-width: 1000px) {
+  .container {
+    margin: 0 21%;
   }
 }

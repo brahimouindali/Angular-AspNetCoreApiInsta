@@ -1,10 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { clear } from 'console';
-import { Observable } from 'rxjs';
 import { MediaService } from 'src/app/services/media.service';
-import { MediaDetailComponent } from '../dialogs/media-detail/media-detail.component';
+import { Urls } from 'src/app/SETTINGS/URLS';
 
 @Component({
   selector: 'app-profile',
@@ -13,10 +11,9 @@ import { MediaDetailComponent } from '../dialogs/media-detail/media-detail.compo
 })
 export class ProfileComponent implements OnInit {
 
-  profileImgPath: string = 'https://localhost:44398/profile';
-  imgPath: string = 'https://localhost:44398/img';
   imgSrc: string = '';
   ums$;
+  gutterSize = '1%';
 
   constructor(
     private mediaService: MediaService,
@@ -24,14 +21,17 @@ export class ProfileComponent implements OnInit {
     public dialog: MatDialog,
     private router: Router
   ) { }
-
-  ngOnInit(): void {  
-    let card: any = document.getElementsByTagName('mat-card') ; console.log(card);    
-    const username = this.route.snapshot.params.id;
-    this.usermedias(username);
+  
+  ngOnInit(): void {
+    this.route.params.subscribe(routeParams => {
+      this.usermedias(routeParams.id);
+    })
+    // let username = this.route.snapshot.params.id;
+    // this.usermedias(username);
   }
   usermedias(username) {
     this.ums$ = this.mediaService.usermedias(username);
+
     this.ums$.subscribe(res => {
       let title: any = document.getElementsByTagName('title')[0];
       title.innerText = `${res.appUser.fullName} (@${username}) • Photos et vidéos Instagram`;
@@ -42,19 +42,30 @@ export class ProfileComponent implements OnInit {
       });
   }
 
+  onResize(event) {
+    if (event.target.innerWidth < 689) {
+      this.gutterSize = '-12px';
+    } else {
+      this.gutterSize = '1%';
+    }
+    // console.log(event.target.innerWidth);    
+  }
+
   getImageProfilePath(url) {
     if (url == null)
-    return '../../../assets/no-img.png';
-  return `${this.profileImgPath}/${url}`;
+      return Urls.noImg;
+    return `${Urls.profilePath}${url}`;
+  }
+
+  getVideoPath(url) {
+    return `${Urls.videoPath}${url}`;
   }
 
   getImageMediaPath(url) {
-    if (url == null)
-      return '../../../assets/no-img.png';
-    return `${this.imgPath}/${url}`;
+    return `${Urls.imagePath}${url}`;
   }
 
-  onOpenModel(data) {
-    console.log(data);
+  onOpenModel() {
+    // console.log(data);
   }
 }

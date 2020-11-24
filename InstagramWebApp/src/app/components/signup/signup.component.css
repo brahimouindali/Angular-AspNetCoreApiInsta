@@ -1,22 +1,32 @@
-.myform {
-    position: relative;
-    display: -ms-flexbox;
-    display: flex;
-    padding: 1rem;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    width: 100%;
-    pointer-events: auto;
-    background-color: #fff;
-    background-clip: padding-box;
-    border: 1px solid rgba(0, 0, 0, .2);
-    border-radius: 1.1rem 1.1rem 0 0;
-    outline: 0;
-    max-width: 800px;
-    min-width: 400px;
-    margin: 0 auto;
-  }
+a {
+  text-decoration: none !important;
+  color: #0095f6;
+}
 
-  form>div{
-      margin-bottom: 30px;
-  }
+
+mat-card {
+  max-width: 400px;
+  margin: auto;
+  text-align: center;
+}
+
+mat-card-title {
+  margin-bottom: 20px !important;
+}
+
+mat-card-subtitle {
+  margin-bottom: 0;
+}
+
+mat-card-subtitle span {
+  color: #262626;
+  font-size: 14px;
+}
+
+mat-form-field {
+  display: block;
+}
+
+.mat-form-field-flex {
+  background-color: #fff !important;
+}

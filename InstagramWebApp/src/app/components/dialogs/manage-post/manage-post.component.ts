@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AccountService } from 'src/app/services/account.service';
+import { Urls } from 'src/app/SETTINGS/URLS';
 import { MedialistComponent } from '../../medialist/medialist.component';
 
 @Component({
@@ -10,23 +12,37 @@ import { MedialistComponent } from '../../medialist/medialist.component';
 })
 export class ManagePostComponent implements OnInit {
 
+  value = `${Urls.WebAppUrl}/p/${this.data.id}`;
   constructor(
     public dialogRef: MatDialogRef<MedialistComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private accountService: AccountService) { }
+    private accountService: AccountService,
+    private _snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
-        
+    // console.log(this.data)   
   }
   onUnfollow(id) {
-    console.log(id); 
+    //console.log(id); 
     this.accountService.followOrUnfollow(id
       // my id 
-      )
-   .subscribe();
+    )
+      .subscribe();
   }
 
   onModelClose() {
     this.dialogRef.close();
+  }
+
+
+  openSnackBar() {
+    this.onModelClose();
+    this._snackBar.open('Lien copié dans le presse-papiers.', '', {
+      duration: 2000,
+      panelClass: ['my-snack-bar']
+    });
+    let mysnackbar: any = document.querySelectorAll('.my-snack-bar')[0];
+    mysnackbar.style.cssText += "color: #fff;position: relative;bottom: -1.5rem;width:100%";
+    console.log(mysnackbar.style.cssText)
   }
 }

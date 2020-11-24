@@ -75,8 +75,11 @@ namespace InstagramAPI.Controllers
         public async Task<IActionResult> Register(UserModel user)
         {
             if (user == null) return BadRequest();
-            if (await _userManager.FindByEmailAsync(user.Email) != null) return BadRequest("email already exist!");
-            if (_context.AppUsers.Any(u => u.UserName == user.UserName)) return BadRequest("username already exist!");
+            var usernameIsExistInDb = _context.AppUsers.Any(u => u.UserName == user.UserName);
+            var emailIsExistInDb = _context.AppUsers.Any(u => u.Email == user.Email);
+
+            if (usernameIsExistInDb || emailIsExistInDb) return BadRequest("username or email already exist!");
+
             var newUser = new AppUser
             {
                 Email = user.Email,
@@ -136,7 +139,7 @@ namespace InstagramAPI.Controllers
                     {
                         new Claim("UserId", user.Id.ToString())
                     }),
-                    Expires = DateTime.UtcNow.AddDays(1),
+                    Expires = DateTime.UtcNow.AddDays(10),
                     SigningCredentials =
                     new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.jwtSecret)),
                         SecurityAlgorithms.HmacSha256Signature)

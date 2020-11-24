@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AccountService } from 'src/app/services/account.service';
+import { Urls } from 'src/app/SETTINGS/URLS';
 import { MedialistComponent } from '../../medialist/medialist.component';
 
 @Component({
@@ -10,22 +11,18 @@ import { MedialistComponent } from '../../medialist/medialist.component';
 })
 export class SubscribeusersComponent implements OnInit {
 
-  userImagePath = 'https://localhost:44398/profile';
-  // photo: string = '';
-
   constructor(
     public dialogRef: MatDialogRef<MedialistComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private accountService: AccountService) { }
 
   ngOnInit(): void {
-    console.log(this.data)
   }
 
   getImgePath(url) {
     if (url == null)
       return '../../../assets/no-img.png';
-    return `${this.userImagePath}/${url}`;
+    return `${Urls.profilePath}${url}`;
   }
 
   onFollowOrUnfollow(id, index) {
